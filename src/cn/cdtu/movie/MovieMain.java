@@ -318,13 +318,18 @@ public class MovieMain {
 
         System.out.println("请输入你想购买的电影ID");
         long movieShowId = SYS_SC.nextLong();
+        System.out.println("请输入你想购买的商家名");
+        String businessName = SYS_SC.next();
+        BusinessDao businessDao=new BusinessDao();
 //        System.out.println("请输入你想购买电影的商家ID");
 //        long customerId = SYS_SC.nextLong();
         OrderDao orederDao=new OrderDao();
         OrederBusiness orederBusiness=orederDao.found(movieShowId);
+        Business business = businessDao.foundrevenue(businessName);
         CustomerDao customerDao=new CustomerDao();
         BigDecimal balance=loginUser.getBalance().subtract(orederBusiness.getPrice());
         customerDao.CustomerBlance(balance,loginUser.getId());
+        businessDao.businessBlance(business.getRevenue().add(orederBusiness.getPrice()),business.getId());
         System.out.println("恭喜你购票成功");
 //        movieShowDao movieShowDao = new movieShowDao();
 //        Order order = new Order();

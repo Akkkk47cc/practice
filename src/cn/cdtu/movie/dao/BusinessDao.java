@@ -5,6 +5,7 @@ import cn.cdtu.movie.entity.Moive;
 import cn.cdtu.movie.entity.MovieShow;
 import cn.cdtu.movie.util.JDBCUtil;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -75,7 +76,7 @@ public class BusinessDao {
 
         return business;
     }
-    public Business foundrevenue(long customerId){
+    public Business foundrevenue(String customerName){
         Connection conn =null;
         String sql = "select * FROM business where login_name= ?";
         ResultSet rs =null;
@@ -84,7 +85,7 @@ public class BusinessDao {
         try {
             conn = JDBCUtil.getConnection();
             pst = conn.prepareStatement(sql);
-            pst.setObject(1,customerId);
+            pst.setObject(1,customerName);
             rs = pst.executeQuery();
             if(rs.next()){
                 business= new Business();
@@ -111,6 +112,25 @@ public class BusinessDao {
         }
 
         return business;
+    }
+    public boolean businessBlance(BigDecimal money, long Id){
+        Connection conn =null;
+        String sql = "update business set revenue =? where id = ?";
+        PreparedStatement pst =null;
+        ResultSet rs = null;
+        try {
+            conn = JDBCUtil.getConnection();
+            pst = conn.prepareStatement(sql);
+            pst.setObject(1,money);
+            pst.setObject(2,Id);
+            pst.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            JDBCUtil.close(rs,pst,conn);
+        }
     }
 
 }
